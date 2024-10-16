@@ -43,6 +43,32 @@ services:
     ports:
       - "127.0.0.1:8000:8000"
 
+  get_users:
+    container_name: iriswebapp_get_users
+    build:
+      context: "./source/getUsers"
+    ports:
+      - "8009:8009"
+    volumes:
+      - "./source/getUsers:/app"
+    restart: always
+    depends_on:
+      - "rabbitmq"
+      - "db"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_ADMIN_USER
+      - POSTGRES_ADMIN_PASSWORD
+      - POSTGRES_SERVER
+      - POSTGRES_PORT
+      - POSTGRES_DB
+    networks:
+      - iris_backend
+      - iris_frontend
+
   worker:
     extends:
       file: docker-compose.base.yml
